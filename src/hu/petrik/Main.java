@@ -16,6 +16,19 @@ public class Main {
         for (int szam : tomb) {
             System.out.println(szam);
         }
+        System.out.println("--------------");
+        int meret = 50;
+        int[] rendezettTomb = new int[meret];
+        for (int i = 0; i < meret; i++) {
+            rendezettTomb[i] =  (int)(Math.random()*98)+1;
+        }
+        rendezettTomb = Arrays.stream(rendezettTomb).sorted().toArray();
+        for (int i = 0; i < meret; i++) {
+            System.out.print(rendezettTomb[i]+",  ");
+        }
+        System.out.println("\n--------------\n");
+        System.out.println(LKR(rendezettTomb, 1, 97, 12));
+
     }
 
     public static int faktorialis(int n) {
@@ -35,13 +48,31 @@ public class Main {
     public static void lotto(int[] szamok, int max, int db) {
         if (db > 0) {
             int proba = (int) (Math.random() * max) + 1;
-            boolean lambda = false;
-            while (lambda) {
-                lambda = Arrays.stream(szamok).anyMatch(szam -> szam == proba);
-               proba = (int) (Math.random() * max) + 1;
+            boolean lambda = Arrays.stream(szamok).anyMatch(szam -> szam == proba);
+            if (lambda) {
+                lotto(szamok, max, db - 1);
+            } else {
+                szamok[db - 1] = proba;
+                lotto(szamok, max, db - 1);
             }
-            szamok[db - 1] = proba;
-            lotto(szamok,max,db-1);
         }
+    }
+
+    public static int LKR(int[] x, int bal, int jobb, int ertek) {
+        if (bal > jobb) {
+            return 0;
+        } else {
+            int center = (bal + jobb) / 2;
+            if (x[center] == ertek) {
+                return center;
+            } else {
+                if (x[center] > ertek) {
+                    LKR(x, bal, center - 1, ertek);
+                } else {
+                    return LKR(x, center + 1, jobb, ertek);
+                }
+            }
+        }
+        return 0;
     }
 }
